@@ -6,7 +6,7 @@ var cover = require('gulp-coverage');
 gulp.task('coverage', function () {
   gulp.src(['test/**/*.js'])
     .pipe(cover.instrument({
-      pattern: ['src/**/*.js'],
+      pattern: ['**/src/**/*.js'],
       debugDirectory: '.debug'
     }))
     .pipe(mocha({
@@ -15,14 +15,14 @@ gulp.task('coverage', function () {
     .pipe(cover.report({
       outFile: 'coverage.html'
     }))
-    .pipe(cover.enforce({ statements: 100, blocks: 100, lines: 100 }));
+    .pipe(cover.enforce({}));
 });
 
 gulp.task('test', function () {
-  gulp.src('test/**/*.js', {read: false}).pipe(mocha({reporter: 'spec'}));
+  gulp.src('test/**/*.js').pipe(mocha({reporter: 'spec'}));
 });
 
 
 gulp.task('ci', ['test'], function () {
-  gulp.watch(['src/**.js', 'test/**.js'], ['test']);
+  gulp.watch(['src/**/*.js', 'test/**/*.js'], ['test']);
 });

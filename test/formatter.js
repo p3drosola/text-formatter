@@ -269,39 +269,7 @@ describe('formatter', function () {
   });
 
   // describe('Plugins', function () {
-  //   describe('pastie', function () {
-  //     describe('parser', function () {
-  //       it('parses text with newlines as pastes', function () {
-  //         formatter.plugins = original_plugins;
-  //         var text = 'this \n is a pasted \n message'
-  //         , next = sinon.stub()
-  //         , ast = formatter.getPlugin('pastie').parser(next, text);
 
-  //         assert(!next.called);
-  //         assert.equal(ast.length, 1);
-  //         assert.equal(ast[0].type, 'pastie');
-  //         assert.equal(ast[0].content, text);
-  //       });
-  //       it('does not parse text without newlines', function () {
-  //         formatter.plugins = original_plugins;
-
-  //         var text = 'this is a message'
-  //         , next = sinon.stub().returns([1, 2, 3])
-  //         , ast = formatter.getPlugin('pastie').parser(next, text);
-
-  //         assert.deepEqual(ast, [1, 2, 3]);
-  //       });
-  //     });
-  //     describe('formatter', function () {
-  //       it('wraps blocks in .formatter-pastie', function () {
-  //         formatter.plugins = original_plugins;
-  //         var node = fnode('pastie', 'hey!')
-  //          , result = formatter.getPlugin('pastie').formatter(node);
-
-  //         assert($(result).hasClass('formatter-pastie'));
-  //       });
-  //     });
-  //   });
   //   describe('sanitize', function () {
   //     it('parses input text to remove bad stuff, passes to next', function () {
   //       var next = sinon.stub();

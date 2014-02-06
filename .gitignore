@@ -1,2 +1,4 @@
 /.coverrun
 /node_modules
+/.coverdata
+/.debug
