@@ -1,0 +1,41 @@
+{
+  "name": "text-formatter",
+  "version": "0.0.1",
+  "description": "A general purpose text parsing & enhancement library ",
+  "main": "formatter.js",
+  "scripts": {
+    "test": "mocha",
+    "coverage": "mocha --require blanket -R html-cov > coverage.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/p3drosola/text-formatter.git"
+  },
+  "keywords": [
+    "text",
+    "parser",
+    "ast",
+    "text",
+    "enhancement",
+    "autolinker",
+    "formatter"
+  ],
+  "author": "Pedro Solá <p3dro.sola@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/p3drosola/text-formatter/issues"
+  },
+  "homepage": "https://github.com/p3drosola/text-formatter",
+  "devDependencies": {
+    "mocha": "~1.17.1",
+    "blanket": "~1.1.6",
+    "gulp": "~3.5.2",
+    "gulp-mocha": "~0.4.1",
+    "gulp-coverage": "0.0.16",
+    "sinon": "~1.8.1"
+  },
+  "dependencies": {
+    "underscore": "~1.5.2",
+    "google-caja": "0.0.2"
+  }
+}
