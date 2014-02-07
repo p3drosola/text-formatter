@@ -27,5 +27,3 @@ describe('plugin:embedded-image', function () {
       '<img src="http://teambox.com/image.png" alt="http://teambox.com/image.png"/></a>');
   });
 });
-
-

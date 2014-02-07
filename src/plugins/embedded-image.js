@@ -3,11 +3,9 @@
 // it scans existing link nodes to see if they link to an image
 // this cuts down on parsing work
 var _ = require('underscore');
+var utils = require('../utils');
 var template = _.template('<a class="formatter-embedded-image" href="<%= src %>" target="_blank">' +
                             '<img src="<%= src %>" alt="<%= src %>"/></a>');
-
-var utils = require('../utils');
-
 var plugin = {
   name: 'embedded-image'
 , treeManipulator: function (tree) {

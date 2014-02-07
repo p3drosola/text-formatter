@@ -8,12 +8,6 @@ var paths = {
   test: 'test/**/*.js'
 };
 
-function test(options) {
-  return function () {
-    gulp.src(paths.test).pipe(mocha(options));
-  };
-}
-
 gulp.task('coverage', function () {
   gulp.src([paths.test])
     .pipe(cover.instrument({
@@ -34,9 +28,7 @@ gulp.task('coverage', function () {
 gulp.task('test', function () {
   gulp.src(paths.test).pipe(mocha());
 });
-gulp.task('test-min', function () {
-  gulp.src(paths.test).pipe(mocha());
-});
-gulp.task('ci', ['test-min'], function () {
-  gulp.watch([paths.src, paths.test], ['test-min']);
+
+gulp.task('ci', ['test'], function () {
+  gulp.watch([paths.src, paths.test], ['test']);
 });

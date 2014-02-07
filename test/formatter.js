@@ -268,90 +268,9 @@ describe('formatter', function () {
     it('accepts nodes without formatters');
   });
 
-  // describe('Plugins', function () {
-
-  //   describe('sanitize', function () {
-  //     it('parses input text to remove bad stuff, passes to next', function () {
-  //       var next = sinon.stub();
-
-  //       formatter.getPlugin('sanitize').parser(next, 'hey there <script>alert("foo")</script>hodor');
-  //       assert(next.calledWith('hey there hodor'));
-  //     });
-  //   });
-  //   describe('text', function () {
-  //     describe('parser', function () {
-  //       it('returns an array with one text node', function () {
-  //         formatter.plugins = original_plugins;
-  //         var ast = formatter.getPlugin('text').parser(undefined, 'hey!');
-
-  //         assert.equal(ast.length, 1);
-  //         assert.equal(ast[0].type, 'text');
-  //         assert.equal(ast[0].content, 'hey!');
-  //       });
-  //     });
-  //     describe('formatter', function () {
-  //       it('returns the plain content', function () {
-  //         formatter.plugins = original_plugins;
-  //         var node = fnode('text', 'hey!')
-  //          , result = formatter.getPlugin('text').formatter(node);
-  //         assert.equal(result, 'hey!');
-  //       });
-  //     });
-  //   });
 
 
-  //   describe('emoji', function () {
-  //     it('parser flags emojis', function () {
 
-  //       function next(block) {
-  //         return [fnode('text', block)];
-  //       }
-
-  //       Teambox.Data.emojis = {
-  //         pluck: function () {
-  //           return ['scream', 'smile', 'cry'];
-  //         }
-  //       };
-
-  //       var text = "hey there :scream: stuff"
-  //        , result = formatter.getPlugin('emoji').parser(next, text);
-
-  //       assert.equal(result.length, 3);
-  //       assert.equal(result[0].type, 'text');
-  //       assert.equal(result[1].type, 'emoji');
-  //       assert.equal(result[2].type, 'text');
-
-  //       assert.equal(result[1].content, 'scream');
-
-  //       delete Teambox.Data.emoji;
-
-  //     });
-  //     it('should not flag at the beginning of the line', function () {
-  //       function next(block) {
-  //         return [fnode('text', block)];
-  //       }
-
-  //       Teambox.Data.emojis = {
-  //         pluck: function () {
-  //           return ['scream', 'smile', 'cry'];
-  //         }
-  //       };
-
-  //       var text = 'scream'
-  //        ,  result = formatter.getPlugin('emoji').parser(next, text);
-
-  //       assert.equal(result.length, 1);
-  //       assert.equal(result[0].type, 'text');
-  //     });
-  //     it('formats emojis as images', function () {
-  //       var node = fnode('emoji', 'scream')
-  //        , result = formatter.getPlugin('emoji').formatter(node);
-
-  //       assert.equal(result, '<img class="formatter-emoji emoji" height="20" width="20" align="absmiddle" '
-  //                           + 'src="/images/emojis/scream.png" alt="scream" title="scream">');
-  //     });
-
-  //   });
   //   describe('teambox-link', function () {
   //     it('treeManipulator tags teambox links', function () {
   //       var ast = [
@@ -421,69 +340,6 @@ describe('formatter', function () {
   //         'data-object-type="task" data-object-id="3" >Earthworks Yoga: <strong>task#3</strong></a>');
   //     });
   //   });
-  //   describe('cloudapp-image', function () {
-  //     it('treeManipulator tags cloudapp iamge links', function () {
-  //       var ast = [fnode('link', 'http://cl.ly/image/35430L0p3m47')];
-  //       formatter.getPlugin('cloudapp-image').treeManipulator(ast);
-  //       assert.equal(ast[0].type, 'embedded-image');
-  //       assert.equal(ast[0].content, 'http://cl.ly/image/35430L0p3m47/content');
-  //     });
-  //   });
-  //   describe('mention', function () {
-  //     before(function () {
-  //       Teambox.Data.users.add({
-  //         first_name: 'Frank'
-  //       , last_name: "Cramer"
-  //       , username: 'frank'
-  //       , id: 889
-  //       , type: 'User'
-  //       });
-  //     });
-  //     it('parser flags @mentions', function () {
-  //        function next(block) {
-  //         return [fnode('text', block)];
-  //       }
 
-  //       var text = "yo @frank what's up?"
-  //        , result = formatter.getPlugin('mention').parser(next, text);
 
-  //       assert.equal(result.length, 3);
-  //       assert.equal(result[0].type, 'text');
-  //       assert.equal(result[1].type, 'mention');
-  //       assert.equal(result[1].content, 'frank');
-  //       assert(result[1].user);
-  //       assert.equal(result[2].type, 'text');
-
-  //     });
-  //     it('parser flags @all mentions', function () {
-  //        function next(block) {
-  //         return [fnode('text', block)];
-  //       }
-
-  //       var text = "hey @all what's up?"
-  //        , result = formatter.getPlugin('mention').parser(next, text);
-
-  //       assert.equal(result.length, 3);
-  //       assert.equal(result[0].type, 'text');
-  //       assert.equal(result[1].type, 'mention');
-  //       assert.equal(result[1].content, 'all');
-  //       assert(!result[1].user);
-  //       assert.equal(result[2].type, 'text');
-
-  //     });
-  //     it('formats mentions as links', function () {
-  //       var result, fnode;
-  //       fnode = fnode('mention', 'frank');
-  //       fnode.user = Teambox.Data.users.get(889);
-  //       result = formatter.getPlugin('mention').formatter(fnode);
-  //       assert.equal(result, '<a href="#!/users/889" class="mention js-mention-link" data-object-type="user" data-object-id="889">Frank Cramer</a>');
-  //     });
-  //     it('formats @all mentions without internal-linking', function () {
-  //       var result, fnode;
-  //       fnode = fnode('mention', 'all');
-  //       result = formatter.getPlugin('mention').formatter(fnode);
-  //       assert.equal(result, '<a class="mention">@all</a>');
-  //     });
-  //   });
-  // });
 });
