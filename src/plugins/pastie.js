@@ -1,3 +1,10 @@
+/**
+ * This flags any text with a new line as a "pastie"
+ *
+ * pasties are displayed as "pre" block.
+ */
+
+
 var fnode = require('../fnode');
 var _ = require('underscore');
 var template = _.template('<div class="formatter-pastie"><pre><%= content %></pre></div>');

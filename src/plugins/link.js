@@ -1,3 +1,10 @@
+/**
+ * Parses links,
+ *
+ * Formats them as anchors
+ */
+
+
 var _ = require('underscore')
 , fnode = require('../fnode')
 , template = _.template('<a class="formatter-link" href="<%=href%>" target="_blank"><%= text %></a>')

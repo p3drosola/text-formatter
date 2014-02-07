@@ -1,3 +1,8 @@
+
+/**
+ * This plugin will embed links to cloudapp images
+ */
+
 var regex = /https?:\/\/cl\.ly\/image\/([a-zA-Z0-9]+)$/;
 var utils = require('../utils');
 
