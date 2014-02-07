@@ -35,9 +35,13 @@ gulp.task('ci', ['test'], function () {
 });
 
 gulp.task('build', function () {
+  if (gutil.env.debug) {
+    gutil.log(gutil.colors.green('Building with sourcemaps'));
+  }
   gulp.src('./formatter.js')
     .pipe(browserify({
       insertGlobals : true
+    , debug: gutil.env.debug
     }))
     .pipe(gulp.dest('./build'))
 });

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Example</title>
+
+  <script src="../build/formatter.js"></script>
+  <script>
+
+  function onReady() {
+    document.querySelector('#input').addEventListener('keyup', onChange);
+    onChange();
+
+    document.querySelector('.debug-info').innerHTML = "enabled plugins: " +
+                            formatter.options.plugin_order.join(', ') + '.';
+  }
+
+  function onChange() {
+    console.log('change');
+    var val = document.querySelector('#input').value;
+    var formatted = formatter.format(val);
+    document.querySelector('#preview').innerHTML = formatted;
+  }
+
+  document.addEventListener('DOMContentLoaded', onReady);
+  </script>
+
+  <style>
+  html, body {
+    font-family: sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background: #eee;
+  }
+  .inner {
+    max-width: 500px;
+    padding-top: 100px;
+    margin: auto;
+  }
+  .box {
+    background: white;
+    margin: 0 0 10px 0;
+    padding: 10px;
+  }
+  .box h3 {
+    margin: 0;
+  }
+  textarea {
+    height: 150px;
+    width: 100%;
+    margin: 10px 0 0 0;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+
+  .formatter-embedded-image {
+    display: block;
+  }
+
+  .formatter-pastie {
+    background: #eee;
+    overflow: auto;
+  }
+  .formatter-mention {
+    background: #C7E6FF;
+    color: #002A3D;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  </style>
+
+</head>
+<body>
+
+<div class="inner">
+  <div class="box">
+    <h3>Input</h3>
+    <textarea id="input">Hey there amigo! feel free to edit this input box. You'll see the output below. Here's a link to http://google.com and here is a mention @bob, and emoji :smile: and here's an image: https://31.media.tumblr.com/7efc4b46986bfd180420a132ba664787/tumblr_inline_n0kua0oDhI1rj0n3c.gif</textarea>
+  </div>
+
+  <div class="box">
+    <h3>Preview</h3>
+    <div id="preview"></div>
+  </div>
+  <div class="box">
+    <h3>Debug</h3>
+    <p class="debug-info"></p>
+  </div>
+</div>
+
+
+
+
+
+</body>
+</html>

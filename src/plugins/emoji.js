@@ -1,6 +1,6 @@
 
 // you should update this variable to point to your images location
-var images = '/images/emojis/';
+var images = 'http://www.emoji-cheat-sheet.com/graphics/emojis/';
 
 var fnode = require('../fnode');
 var _ = require('underscore');
