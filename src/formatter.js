@@ -8,6 +8,20 @@ var formatter = {
 };
 
 /**
+ * This function is an alias to setup a list of plugins
+ * @param {object} plugin [, plugin] [, plugin] ...
+ * @return {Object} formatter
+ */
+formatter.use = function () {
+  var plugins = _.toArray(arguments);
+  var names = _.pluck(plugins, 'name');
+  _.each(plugins, _.bind(formatter.addPlugin, formatter));
+  this.options.plugin_order = names;
+  return this;
+};
+
+
+/**
  * Configures the formatter
  * @param  {Object} options
  *  - plugin_order {Array[String]} an array of plugin names in the right order of priority
