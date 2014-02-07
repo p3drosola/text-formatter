@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var mocha = require('gulp-mocha');
 var cover = require('gulp-coverage');
+var browserify = require('gulp-browserify');
 
 var paths = {
   src: 'src/**/*.js',
@@ -31,4 +32,12 @@ gulp.task('test', function () {
 
 gulp.task('ci', ['test'], function () {
   gulp.watch([paths.src, paths.test], ['test']);
+});
+
+gulp.task('build', function () {
+  gulp.src('./formatter.js')
+    .pipe(browserify({
+      insertGlobals : true
+    }))
+    .pipe(gulp.dest('./build'))
 });
