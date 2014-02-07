@@ -1,3 +1,5 @@
+var fnode = require('../fnode');
+
 /**
  * This is the basic "plain text" plugin
  */
@@ -7,6 +9,6 @@ module.exports = {
     return [fnode('text', block)];
   }
 , formatter: function (node) {
-    return node.content;
+    return String(node.content);
   }
 };

@@ -32,7 +32,8 @@
     "gulp": "~3.5.2",
     "gulp-mocha": "~0.4.1",
     "gulp-coverage": "0.0.16",
-    "sinon": "~1.8.1"
+    "sinon": "~1.8.1",
+    "gulp-util": "~2.2.14"
   },
   "dependencies": {
     "underscore": "~1.5.2",
