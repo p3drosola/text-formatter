@@ -12,7 +12,7 @@ var paths = {
 gulp.task('coverage', function () {
   gulp.src([paths.test])
     .pipe(cover.instrument({
-      pattern: ['**/' + paths.src],
+      pattern: [paths.src],
       debugDirectory: '.debug'
     }))
     .pipe(mocha({

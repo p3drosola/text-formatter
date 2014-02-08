@@ -37,7 +37,7 @@ describe('emoji', function () {
      , result = plugin.formatter(node);
 
     assert.equal(result, '<img class="formatter-emoji emoji" height="20" width="20" align="absmiddle" '
-                        + 'src="/images/emojis/scream.png" alt="scream" title="scream">');
+                        + 'src="http://www.emoji-cheat-sheet.com/graphics/emojis/scream.png" alt="scream" title="scream">');
   });
 
 });
