@@ -25,8 +25,4 @@ formatter.use(
 
 module.exports  = formatter;
 
-// export for the browser
-// you can change this name if it conflicts with something in your environment
-if (process.browser) {
-  global.formatter = formatter;
-}
+

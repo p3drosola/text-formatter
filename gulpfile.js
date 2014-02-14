@@ -39,10 +39,10 @@ gulp.task('build', function () {
   if (gutil.env.debug) {
     gutil.log(gutil.colors.green('Building with sourcemaps'));
   }
-  gulp.src('./formatter.js')
+  gulp.src('./formatter.js', {read: false})
     .pipe(browserify({
-      insertGlobals : true
-    , debug: gutil.env.debug
+      debug: gutil.env.debug
+    , standalone: 'formatter' // this is the global name
     }))
     .pipe(uglify())
     .pipe(gulp.dest('./build'))
