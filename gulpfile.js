@@ -43,6 +43,7 @@ gulp.task('build', function () {
     .pipe(browserify({
       debug: gutil.env.debug
     , standalone: 'formatter' // this is the global name
+    , exclude: ['underscore']
     }))
     .pipe(uglify())
     .pipe(gulp.dest('./build'))
