@@ -5,6 +5,7 @@ var _ = require('underscore');
 var formatter = {
   plugins: {}
 , options: {}
+, utils: utils
 };
 
 /**

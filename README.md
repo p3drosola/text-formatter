@@ -83,6 +83,8 @@ We've included a number of plugins you can customize, or use as a starting point
 
 Edit the file `formatter.js` to make your selection of plugins, and change their order.
 
+Run `gulp build` to build your code into `build/formatter.js`. You can test your plugins using `example/index.html`.
+
 I recomment reading the code of the existing plugins. I've tried to comment them so they'll be quite easy to understand.
 
 Please send a PR if you write a plugin other people might find usefull.

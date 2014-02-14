@@ -10,7 +10,7 @@ var all_regex = new RegExp(/(?:^|\s)(@all)(?:$|\s)/gi);
 var regex = new RegExp(/(@(?:[\w._\-]+)\b)/gi);
 var template = _.template('<a href="<%= href %>" class="formatter-mention"><%= name %></a>');
 
-module.exports = {
+var plugin = {
   name: 'mention'
 
 , parser: function (next, block) {
@@ -36,3 +36,9 @@ module.exports = {
     });
   }
 };
+
+module.exports = plugin;
+
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}

@@ -6,7 +6,7 @@
 var regex = /https?:\/\/cl\.ly\/image\/([a-zA-Z0-9]+)$/;
 var utils = require('../utils');
 
-module.exports= {
+var plugin = {
   name: 'cloudapp-image'
 
 , treeManipulator: function (tree) {
@@ -18,3 +18,9 @@ module.exports= {
     });
   }
 };
+
+module.exports = plugin;
+
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}

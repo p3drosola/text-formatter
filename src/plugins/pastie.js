@@ -9,7 +9,7 @@ var fnode = require('../fnode');
 var _ = require('underscore');
 var template = _.template('<div class="formatter-pastie"><pre><%= content %></pre></div>');
 
-module.exports = {
+var plugin = {
   name: 'pastie'
 , parser: function (next, block) {
     var i = block.indexOf('\n');
@@ -23,3 +23,10 @@ module.exports = {
     return template(node);
   }
 };
+
+
+module.exports = plugin;
+
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}

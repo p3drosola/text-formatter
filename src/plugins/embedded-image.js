@@ -26,3 +26,7 @@ var plugin = {
 };
 
 module.exports = plugin;
+
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}

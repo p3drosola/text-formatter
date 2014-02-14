@@ -1,18 +1,28 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/fake_814595c4.js",__dirname="/";var formatter = require('./src/formatter');
+var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/fake_8a13e14a.js",__dirname="/";var formatter = require('./src/formatter');
+
+/*
+
+  Edit this file to build a bundle that's suited for your use case
+
+  Run `gulp build` to build the bundle into the `/build` dir.
+
+  The order of these plugins is very important, so take it into account
+ */
+
 
 formatter.use(
-  require('./src/plugins/pastie')
-, require('./src/plugins/sanitize')
+  require('./src/plugins/pastie')    // flags any text with a new line as a "pastie". formats as a 'pre'
+, require('./src/plugins/sanitize')  // sanitizes input with google caja sanitizer
 
 , require('./src/plugins/link')
-, require('./src/plugins/embedded-image')
-, require('./src/plugins/cloudapp-image')
-, require('./src/plugins/mention')
+, require('./src/plugins/embedded-image') // parses links, formats as anchors
+, require('./src/plugins/cloudapp-image') // embeds linked images
+// , require('./src/plugins/mention') // parses @mentions, makes them anchors
 
-, require('./src/plugins/emoji')
+, require('./src/plugins/emoji') // parses & embeds :emojis:
 
-, require('./src/plugins/text'));
+, require('./src/plugins/text'));  // this is the basic text parser. should always be at the bottom
 
 module.exports  = formatter;
 
@@ -22,7 +32,7 @@ if (process.browser) {
   global.formatter = formatter;
 }
 
-},{"./src/formatter":7,"./src/plugins/cloudapp-image":8,"./src/plugins/embedded-image":9,"./src/plugins/emoji":10,"./src/plugins/link":11,"./src/plugins/mention":12,"./src/plugins/pastie":13,"./src/plugins/sanitize":14,"./src/plugins/text":15,"__browserify_Buffer":4,"__browserify_process":3}],2:[function(require,module,exports){
+},{"./src/formatter":7,"./src/plugins/cloudapp-image":8,"./src/plugins/embedded-image":9,"./src/plugins/emoji":10,"./src/plugins/link":11,"./src/plugins/pastie":12,"./src/plugins/sanitize":13,"./src/plugins/text":14,"__browserify_Buffer":4,"__browserify_process":3}],2:[function(require,module,exports){
 var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/node_modules/google-caja/sanitizer.js",__dirname="/node_modules/google-caja";var window = {};
 
 /* Copyright Google Inc.
@@ -7222,6 +7232,7 @@ var _ = require('underscore');
 var formatter = {
   plugins: {}
 , options: {}
+, utils: utils
 };
 
 /**
@@ -7357,11 +7368,16 @@ formatter.fnode = fnode;
 module.exports = formatter;
 
 
-},{"./fnode":6,"./utils":16,"__browserify_Buffer":4,"__browserify_process":3,"underscore":5}],8:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/cloudapp-image.js",__dirname="/src/plugins";var regex = /https?:\/\/cl\.ly\/image\/([a-zA-Z0-9]+)$/;
+},{"./fnode":6,"./utils":15,"__browserify_Buffer":4,"__browserify_process":3,"underscore":5}],8:[function(require,module,exports){
+var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/cloudapp-image.js",__dirname="/src/plugins";
+/**
+ * This plugin will embed links to cloudapp images
+ */
+
+var regex = /https?:\/\/cl\.ly\/image\/([a-zA-Z0-9]+)$/;
 var utils = require('../utils');
 
-module.exports= {
+var plugin = {
   name: 'cloudapp-image'
 
 , treeManipulator: function (tree) {
@@ -7374,17 +7390,25 @@ module.exports= {
   }
 };
 
-},{"../utils":16,"__browserify_Buffer":4,"__browserify_process":3}],9:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/embedded-image.js",__dirname="/src/plugins";
-// This plugin implements a treeManipulator
-// it scans existing link nodes to see if they link to an image
-// this cuts down on parsing work
+module.exports = plugin;
+
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}
+
+},{"../utils":15,"__browserify_Buffer":4,"__browserify_process":3}],9:[function(require,module,exports){
+var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/embedded-image.js",__dirname="/src/plugins";/*
+ * This plugin implements a treeManipulator
+ * it scans existing link nodes to see if they link to an image
+ * this cuts down on parsing work
+ */
 var _ = require('underscore');
 var utils = require('../utils');
 var template = _.template('<a class="formatter-embedded-image" href="<%= src %>" target="_blank">' +
                             '<img src="<%= src %>" alt="<%= src %>"/></a>');
 var plugin = {
   name: 'embedded-image'
+
 , treeManipulator: function (tree) {
     utils.bfSearch(tree, function (node) {
       if (node.type === 'link' && node.content.match(/\.(png|jpg|jpeg|gif)$/)) {
@@ -7392,6 +7416,7 @@ var plugin = {
       }
     });
   }
+
 , formatter: function (node) {
     return template({
       src: node.content
@@ -7401,8 +7426,16 @@ var plugin = {
 
 module.exports = plugin;
 
-},{"../utils":16,"__browserify_Buffer":4,"__browserify_process":3,"underscore":5}],10:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/emoji.js",__dirname="/src/plugins";
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}
+
+},{"../utils":15,"__browserify_Buffer":4,"__browserify_process":3,"underscore":5}],10:[function(require,module,exports){
+var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/emoji.js",__dirname="/src/plugins";/*
+ * This plugin formats emojis in the style of
+ * http://www.emoji-cheat-sheet.com/
+ */
+
 // you should update this variable to point to your images location
 var images = 'http://www.emoji-cheat-sheet.com/graphics/emojis/';
 
@@ -7415,7 +7448,7 @@ var template = _.template('<img class="formatter-emoji emoji" height="20" width=
 
 var names = "+1 -1 100 109 1234 8ball a ab abc abcd accept aerial_tramway airplane alarm_clock alien ambulance anchor angel anger angry anguished ant apple aquarius aries arrow_backward arrow_double_down arrow_double_up arrow_down arrow_down_small arrow_forward arrow_heading_down arrow_heading_up arrow_left arrow_lower_left arrow_lower_right arrow_right arrow_right_hook arrow_up arrow_up_down arrow_up_small arrow_upper_left arrow_upper_right arrows_clockwise arrows_counterclockwise art articulated_lorry astonished atm b baby baby_bottle baby_chick baby_symbol baggage_claim balloon ballot_box_with_check bamboo banana bangbang bank bar_chart barber baseball basketball bath bathtub battery bear bee beer beers beetle beginner bell bento bicyclist bike bikini bird birthday black_circle black_joker black_nib black_square black_square_button blossom blowfish blue_book blue_car blue_heart blush boar boat bomb book bookmark bookmark_tabs books boom boot bouquet bow bowling bowtie boy bread bride_with_veil bridge_at_night briefcase broken_heart bug bulb bullettrain_front bullettrain_side bus busstop bust_in_silhouette busts_in_silhouette cactus cake calendar calling camel camera cancer candy capital_abcd capricorn car card_index carousel_horse cat cat2 cd chart chart_with_downwards_trend chart_with_upwards_trend checkered_flag cherries cherry_blossom chestnut chicken children_crossing chocolate_bar christmas_tree church cinema circus_tent city_sunrise city_sunset cl clap clapper clipboard clock1 clock10 clock1030 clock11 clock1130 clock12 clock1230 clock130 clock2 clock230 clock3 clock330 clock4 clock430 clock5 clock530 clock6 clock630 clock7 clock730 clock8 clock830 clock9 clock930 closed_book closed_lock_with_key closed_umbrella cloud clubs cn cocktail coffee cold_sweat collision computer confetti_ball confounded confused congratulations construction construction_worker convenience_store cookie cool cop copyright corn couple couple_with_heart couplekiss cow cow2 credit_card crocodile crossed_flags crown cry crying_cat_face crystal_ball cupid curly_loop currency_exchange curry custard customs cyclone dancer dancers dango dart dash date de deciduous_tree department_store diamond_shape_with_a_dot_inside diamonds disappointed dizzy dizzy_face do_not_litter dog dog2 dollar dolls dolphin door doughnut dragon dragon_face dress dromedary_camel droplet dvd e-mail ear ear_of_rice earth_africa earth_americas earth_asia egg eggplant egplant eight eight_pointed_black_star eight_spoked_asterisk electric_plug elephant email end envelope es euro european_castle european_post_office evergreen_tree exclamation expressionless eyeglasses eyes facepunch factory fallen_leaf family fast_forward fax fearful feelsgood feet ferris_wheel file_folder finnadie fire fire_engine fireworks first_quarter_moon first_quarter_moon_with_face fish fish_cake fishing_pole_and_fish fist five flags flashlight floppy_disk flower_playing_cards flushed foggy football fork_and_knife fountain four four_leaf_clover fr free fried_shrimp fries frog frowning fuelpump full_moon full_moon_with_face game_die gb gem gemini ghost gift gift_heart girl globe_with_meridians goat goberserk godmode golf grapes green_apple green_book green_heart grey_exclamation grey_question grimacing grin grinning guardsman guitar gun haircut hamburger hammer hamster hand handbag hankey hash hatched_chick hatching_chick headphones hear_no_evil heart heart_decoration heart_eyes heart_eyes_cat heartbeat heartpulse hearts heavy_check_mark heavy_division_sign heavy_dollar_sign heavy_exclamation_mark heavy_minus_sign heavy_multiplication_x heavy_plus_sign helicopter herb hibiscus high_brightness high_heel hocho honey_pot honeybee horse horse_racing hospital hotel hotsprings hourglass hourglass_flowing_sand house house_with_garden hurtrealbad hushed ice_cream icecream id ideograph_advantage imp inbox_tray incoming_envelope information_desk_person information_source innocent interrobang iphone it izakaya_lantern jack_o_lantern japan japanese_castle japanese_goblin japanese_ogre jeans joy joy_cat jp key keycap_ten kimono kiss kissing kissing_cat kissing_closed_eyes kissing_face kissing_heart kissing_smiling_eyes koala koko kr large_blue_circle large_blue_diamond large_orange_diamond last_quarter_moon last_quarter_moon_with_face laughing leaves ledger left_luggage left_right_arrow leftwards_arrow_with_hook lemon leo leopard libra light_rail link lips lipstick lock lock_with_ink_pen lollipop loop loudspeaker love_hotel love_letter low_brightness m mag mag_right mahjong mailbox mailbox_closed mailbox_with_mail mailbox_with_no_mail man man_with_gua_pi_mao man_with_turban mans_shoe maple_leaf mask massage meat_on_bone mega melon memo mens metal metro microphone microscope milky_way minibus minidisc minus1 mobile_phone_off money_with_wings moneybag monkey monkey_face monorail moon mortar_board mount_fuji mountain_bicyclist mountain_cableway mountain_railway mouse mouse2 movie_camera moyai muscle mushroom musical_keyboard musical_note musical_score mute nail_care name_badge neckbeard necktie negative_squared_cross_mark neutral_face new new_moon new_moon_with_face newspaper ng nine no_bell no_bicycles no_entry no_entry_sign no_good no_mobile_phones no_mouth no_pedestrians no_smoking non-potable_water nose notebook notebook_with_decorative_cover notes nut_and_bolt o o2 ocean octocat octopus oden office ok ok_hand ok_woman older_man older_woman on oncoming_automobile oncoming_bus oncoming_police_car oncoming_taxi one open_file_folder open_hands open_mouth ophiuchus orange_book outbox_tray ox page_facing_up page_with_curl pager palm_tree panda_face paperclip parking part_alternation_mark partly_sunny passport_control paw_prints peach pear pencil pencil2 penguin pensive performing_arts persevere person_frowning person_with_blond_hair person_with_pouting_face phone pig pig2 pig_nose pill pineapple pisces pizza plus1 point_down point_left point_right point_up point_up_2 police_car poodle poop post_office postal_horn postbox potable_water pouch poultry_leg pound pouting_cat pray princess punch purple_heart purse pushpin put_litter_in_its_place question rabbit rabbit2 racehorse radio radio_button rage rage1 rage2 rage3 rage4 railway_car rainbow raised_hand raised_hands ram ramen rat recycle red_car red_circle registered relaxed relieved repeat repeat_one restroom revolving_hearts rewind ribbon rice rice_ball rice_cracker rice_scene ring rocket roller_coaster rooster rose rotating_light round_pushpin rowboat ru rugby_football runner running running_shirt_with_sash sa sagittarius sailboat sake sandal santa satellite satisfied saxophone school school_satchel scissors scorpius scream scream_cat scroll seat secret see_no_evil seedling seven shaved_ice sheep shell ship shipit shirt shit shoe shower signal_strength six six_pointed_star ski skull sleeping sleepy slot_machine small_blue_diamond small_orange_diamond small_red_triangle small_red_triangle_down smile smile_cat smiley smiley_cat smiling_imp smirk smirk_cat smoking snail snake snowboarder snowflake snowman sob soccer soon sos sound space_invader spades spaghetti sparkler sparkles sparkling_heart speak_no_evil speaker speech_balloon speedboat squirrel star star2 stars station statue_of_liberty steam_locomotive stew straight_ruler strawberry stuck_out_tongue stuck_out_tongue_closed_eyes stuck_out_tongue_winking_eye sun_with_face sunflower sunglasses sunny sunrise sunrise_over_mountains surfer sushi suspect suspension_railway sweat sweat_drops sweat_smile sweet_potato swimmer symbols syringe tada tanabata_tree tangerine taurus taxi tea telephone telephone_receiver telescope tennis tent thought_balloon three thumbsdown thumbsup ticket tiger tiger2 tired_face tm toilet tokyo_tower tomato tongue tongue2 top tophat tractor traffic_light train train2 tram triangular_flag_on_post triangular_ruler trident triumph trolleybus trollface trophy tropical_drink tropical_fish truck trumpet tshirt tulip turtle tv twisted_rightwards_arrows two two_hearts two_men_holding_hands two_women_holding_hands u5272 u5408 u55b6 u6307 u6708 u6709 u6e80 u7121 u7533 u7981 u7a7a uk umbrella unamused underage unlock up us v vertical_traffic_light vhs vibration_mode video_camera video_game violin virgo volcano vs walking waning_crescent_moon waning_gibbous_moon warning watch water_buffalo watermelon wave wavy_dash waxing_crescent_moon waxing_gibbous_moon wc weary wedding whale whale2 wheelchair white_check_mark white_circle white_flower white_square white_square_button wind_chime wine_glass wink wink2 wolf woman womans_clothes womans_hat womens worried wrench x yellow_heart yen yum zap zero zzz".split(' ');
 
-module.exports = {
+var plugin = {
   name: 'emoji'
 
 , parser: function (next, block) {
@@ -7445,8 +7478,20 @@ module.exports = {
   }
 };
 
+module.exports = plugin;
+
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}
+
 },{"../fnode":6,"__browserify_Buffer":4,"__browserify_process":3,"underscore":5}],11:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/link.js",__dirname="/src/plugins";var _ = require('underscore')
+var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/link.js",__dirname="/src/plugins";/**
+ * Parses links,
+ *
+ * Formats them as anchors
+ */
+
+var _ = require('underscore')
 , fnode = require('../fnode')
 , template = _.template('<a class="formatter-link" href="<%=href%>" target="_blank"><%= text %></a>')
 , plugin = {
@@ -7496,52 +7541,23 @@ plugin.parser = function (next, block) {
 
 module.exports = plugin;
 
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}
+
 },{"../fnode":6,"__browserify_Buffer":4,"__browserify_process":3,"underscore":5}],12:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/mention.js",__dirname="/src/plugins";/*
-  This plugin formats & autolinks @mentions
+var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/pastie.js",__dirname="/src/plugins";/**
+ * This flags any text with a new line as a "pastie"
+ *
+ * pasties are displayed as "pre" block.
  */
 
-var _ = require('underscore');
-var utils = require('../utils');
+
 var fnode = require('../fnode');
-
-var all_regex = new RegExp(/(?:^|\s)(@all)(?:$|\s)/gi);
-var regex = new RegExp(/(@(?:[\w._\-]+)\b)/gi);
-var template = _.template('<a href="<%= href %>" class="formatter-mention"><%= name %></a>');
-
-module.exports = {
-  name: 'mention'
-
-, parser: function (next, block) {
-    var parts = block.split(regex)
-     , result = [];
-    parts = _.each(parts, function (part) {
-      var username, n;
-      if (part.match(regex)) {
-        username = part.replace('@', '');
-        n = fnode('mention', username);
-        result.push(n);
-      } else  {
-        result = result.concat(next(part));
-      }
-    });
-    return result;
-  }
-
-, formatter: function (node) {
-    return template({
-      href: '/users/' + node.content
-    , name: '@' + node.content
-    });
-  }
-};
-
-},{"../fnode":6,"../utils":16,"__browserify_Buffer":4,"__browserify_process":3,"underscore":5}],13:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/pastie.js",__dirname="/src/plugins";var fnode = require('../fnode');
 var _ = require('underscore');
 var template = _.template('<div class="formatter-pastie"><pre><%= content %></pre></div>');
 
-module.exports = {
+var plugin = {
   name: 'pastie'
 , parser: function (next, block) {
     var i = block.indexOf('\n');
@@ -7556,10 +7572,23 @@ module.exports = {
   }
 };
 
-},{"../fnode":6,"__browserify_Buffer":4,"__browserify_process":3,"underscore":5}],14:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/sanitize.js",__dirname="/src/plugins";var caja = require('google-caja');
 
-module.exports = {
+module.exports = plugin;
+
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}
+
+},{"../fnode":6,"__browserify_Buffer":4,"__browserify_process":3,"underscore":5}],13:[function(require,module,exports){
+var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/sanitize.js",__dirname="/src/plugins";/**
+ * This plugin sanitizes input with google caja sanitizer
+ *
+ * https://code.google.com/p/google-caja/
+ */
+
+var caja = require('google-caja');
+
+var plugin = {
   name: 'sanitize'
 , parser: function (next, block) {
     var sanitized = caja.sanitize(block);
@@ -7567,13 +7596,22 @@ module.exports = {
   }
 };
 
-},{"__browserify_Buffer":4,"__browserify_process":3,"google-caja":2}],15:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/text.js",__dirname="/src/plugins";var fnode = require('../fnode');
+module.exports = plugin;
 
-/**
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}
+
+},{"__browserify_Buffer":4,"__browserify_process":3,"google-caja":2}],14:[function(require,module,exports){
+var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/plugins/text.js",__dirname="/src/plugins";/**
  * This is the basic "plain text" plugin
+ *
+ * It should always be the last one in the plugin chain
  */
-module.exports = {
+
+var fnode = require('../fnode');
+
+var plugin = {
   name: 'text'
 , parser: function (next, block) {
     return [fnode('text', block)];
@@ -7583,7 +7621,13 @@ module.exports = {
   }
 };
 
-},{"../fnode":6,"__browserify_Buffer":4,"__browserify_process":3}],16:[function(require,module,exports){
+module.exports = plugin;
+
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}
+
+},{"../fnode":6,"__browserify_Buffer":4,"__browserify_process":3}],15:[function(require,module,exports){
 var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/src/utils.js",__dirname="/src";var _ = require('underscore');
 var utils = {};
 

@@ -34,7 +34,8 @@
     "gulp-coverage": "0.0.16",
     "sinon": "~1.8.1",
     "gulp-util": "~2.2.14",
-    "gulp-browserify": "~0.4.2"
+    "gulp-browserify": "~0.4.2",
+    "gulp-uglify": "~0.2.1"
   },
   "dependencies": {
     "underscore": "~1.5.2",

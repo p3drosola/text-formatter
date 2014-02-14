@@ -3,6 +3,7 @@ var gutil = require('gulp-util');
 var mocha = require('gulp-mocha');
 var cover = require('gulp-coverage');
 var browserify = require('gulp-browserify');
+var uglify = require('gulp-uglify');
 
 var paths = {
   src: 'src/**/*.js',
@@ -43,5 +44,6 @@ gulp.task('build', function () {
       insertGlobals : true
     , debug: gutil.env.debug
     }))
+    .pipe(uglify())
     .pipe(gulp.dest('./build'))
 });

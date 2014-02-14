@@ -6,10 +6,16 @@
 
 var caja = require('google-caja');
 
-module.exports = {
+var plugin = {
   name: 'sanitize'
 , parser: function (next, block) {
     var sanitized = caja.sanitize(block);
     return next(sanitized);
   }
 };
+
+module.exports = plugin;
+
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}

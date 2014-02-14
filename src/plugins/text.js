@@ -6,8 +6,7 @@
 
 var fnode = require('../fnode');
 
-
-module.exports = {
+var plugin = {
   name: 'text'
 , parser: function (next, block) {
     return [fnode('text', block)];
@@ -16,3 +15,9 @@ module.exports = {
     return String(node.content);
   }
 };
+
+module.exports = plugin;
+
+if (global.formatter) {
+  formatter.addPlugin(plugin);
+}
